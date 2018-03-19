@@ -1,29 +1,35 @@
 const express = require('express');
-const MongoClient = require('mongodb').MongoClient;
+// const MongoClient = require('mongodb').MongoClient;
+const mongoose = require('mongoose');
+
 const bodyParser = require('body-parser');
-
-const db = require('./config').database;
-
+const dbdata = require('./config').database;
 const app = express();
-
 const port = 3002;
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
-
-MongoClient.connect(db.url, function (err, db) {
+mongoose.connect(dbdata.url);
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', err => {
     if (err) throw err
 
-    require('./routes')(app, db);
+    require('./routes')(app);
 
     app.listen(port, () => {
         console.log('We are live  ' + port);
     });
-    // db.collection('mammals').find().toArray(function (err, result) {
-    //     if (err) throw err
+});
 
-    //     console.log(result)
-    // })
-})
+
+// mongoose.connect(dbdata.url, (err) => {
+//     if (err) throw err
+
+//     require('./routes')(app);
+
+//     app.listen(port, () => {
+//         console.log('We are live  ' + port);
+//     });
+// });
 

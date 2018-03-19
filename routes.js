@@ -1,53 +1,42 @@
-const ObjectID = require('mongodb').ObjectID;
-const database = 'crates';
+const Crate = require('./model/crateModel');
 
 module.exports = function (app, db) {
+    //create new crate
     app.post('/crate', (req, res) => {
-        console.log(req.body.title);
         if (req.body.title) {
-
-            const crate = {
+            const crate = new Crate({
                 title: req.body.title,
                 data: {
-                    temperature: 0,
-                    humidity: 0
+                    temperature: 20,
+                    humidity: 90,
                 }
-            };
+            });
 
-            db.collection(database).insert(crate, (err, result) => {
-                if (err) {
-                    res.json({ 'error': 'An error has occurred' });
-                } else {
-                    res.json(result.ops[0]);
-                }
-            })
+            crate.save(function (err) {
+                if (err) throw err;
+                res.json({ crate });
+            });
         } else {
             res.json({ error: 'Error no title found!' });
         }
-
     });
 
+    // Get all the crates
     app.get('/crate', (req, res) => {
-        // find()
-        db.collection(database).find({}).toArray((err, item) => {
-            if (err) {
-                res.json({ 'error': 'An error has occurred' });
-            } else {
-                console.log(item);
+        Crate.find({}, (err, item) => {
+            err ?
+                res.json({ 'error': 'An error has occurred' }) :
                 res.json(item);
-            }
         });
     });
 
+    // Get crate by id
     app.get('/crate/:id', (req, res) => {
         const id = req.params.id;
-        const details = { '_id': new ObjectID(id) };
-        db.collection(database).findOne(details, (err, item) => {
-            if (err) {
-                res.send({ 'error': 'An error has occurred' });
-            } else {
-                res.send(item);
-            }
+        Crate.findOne({ _id: id }, (err, crate) => {
+            err ?
+                res.send({ 'error': 'An error has occurred' }) :
+                res.send(crate);
         });
     })
 }
