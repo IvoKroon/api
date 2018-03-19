@@ -1,19 +1,11 @@
-const Crate = require('../model/crateModel');
+const Crate = require('../controller/crateController');
 
 module.exports = app => {
     //create new crate
     app.post('/crate', (req, res) => {
         if (req.body.title) {
-            const crate = new Crate({
-                title: req.body.title,
-                data: {
-                    temperature: 20,
-                    humidity: 90,
-                }
-            });
-
-            crate.save(function (err) {
-                if (err) throw err;
+            Crate.create(req.body.title, crate => {
+                console.log(crate);
                 res.json({ crate });
             });
         } else {
@@ -23,20 +15,16 @@ module.exports = app => {
 
     // Get all the crates
     app.get('/crate', (req, res) => {
-        Crate.find({}, (err, item) => {
-            err ?
-                res.json({ 'error': 'An error has occurred' }) :
-                res.json(item);
+        Crate.findAll(crates => {
+            res.json(crates);
         });
     });
 
     // Get crate by id
     app.get('/crate/:id', (req, res) => {
         const id = req.params.id;
-        Crate.findOne({ _id: id }, (err, crate) => {
-            err ?
-                res.send({ 'error': 'An error has occurred' }) :
-                res.send(crate);
-        });
+        Crate.findOneById(id, crate => {
+            res.send(crate);
+        })
     })
 }
