@@ -21,15 +21,3 @@ db.once('open', err => {
         console.log('We are live  ' + port);
     });
 });
-
-
-// mongoose.connect(dbdata.url, (err) => {
-//     if (err) throw err
-
-//     require('./routes')(app);
-
-//     app.listen(port, () => {
-//         console.log('We are live  ' + port);
-//     });
-// });
-
