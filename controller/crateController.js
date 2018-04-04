@@ -5,8 +5,7 @@ module.exports = {
     findAll: async () => {
         let crates;
         try {
-            crates = await Crate.find();
-            return crates;
+            return await Crate.find();
         } catch (err) {
             throw err;
         }
@@ -15,11 +14,8 @@ module.exports = {
     // Create new Crate
     create: async title => {
         try {
-            const crate = new Crate({
-                title, temperature: 99, humidity: 90
-            })
-            const data = await crate.save();
-            return data;
+            const crate = new Crate({ title, temperature: 99, humidity: 90 });
+            return await crate.save();
 
         } catch (err) {
             throw err;
@@ -29,17 +25,18 @@ module.exports = {
     // Find one create by id
     findOneById: async id => {
         try {
-            const crate = await Crate.findOne({ _id: id });
-            return crate;
-
+            if (id.match(/^[0-9a-fA-F]{24}$/)) {
+                return await Crate.findById(id);
+            } else {
+                return false;
+            }
         } catch (err) {
             throw err;
         }
     },
     remove: async id => {
         try {
-            const done = await Crate.find({ _id: id }).remove().exec();
-            console.log(done);
+            return await Crate.find({ _id: id }).remove().exec();
         } catch (err) {
             throw err;
         }

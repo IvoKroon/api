@@ -6,7 +6,7 @@ const crateSchema = new Schema({
     title: String,
     temperature: Number,
     humidity: Number,
-    client: { type: mongoose.Schema.Types.ObjectId, ref: 'Recipe' }
+    recipe: { type: mongoose.Schema.Types.ObjectId, ref: 'Recipe' }
 });
 
 // the schema is useless so far
