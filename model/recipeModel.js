@@ -2,16 +2,14 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 // create a schema
-const crateSchema = new Schema({
+const recipeSchema = new Schema({
     title: String,
-    temperature: Number,
-    humidity: Number,
-    client: { type: mongoose.Schema.Types.ObjectId, ref: 'Recipe' }
+    desc: String
 });
 
 // the schema is useless so far
 // we need to create a model using it
-const Crate = mongoose.model('Crate', crateSchema);
+const Recipe = mongoose.model('Recipe', recipeSchema);
 
 // make this available to our users in our Node applications
-module.exports = Crate;
+module.exports = Recipe;

@@ -7,6 +7,8 @@ const dbdata = require('./config').database;
 const app = express();
 const port = 3002;
 
+const crateController = require('./controller/crateController')
+
 app.use(bodyParser.urlencoded({ extended: true }));
 
 mongoose.connect(dbdata.url);
@@ -19,5 +21,12 @@ db.once('open', err => {
 
     app.listen(port, () => {
         console.log('We are live  ' + port);
+        async () => {
+            const crate = await crateController.create('testing');
+            console.log(crate);
+        }
+
+
+
     });
 });
