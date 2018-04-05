@@ -6,7 +6,12 @@ const crateSchema = new Schema({
     title: String,
     temperature: Number,
     humidity: Number,
-    recipe: { type: mongoose.Schema.Types.ObjectId, ref: 'Recipe' }
+    recipe: { type: mongoose.Schema.Types.ObjectId, ref: 'Recipe' },
+    startDate: { type: Date, default: Date.now },
+});
+
+crateSchema.virtual('startDateTimestamp').get(function () {
+    return this.startDate.getTime();
 });
 
 // the schema is useless so far

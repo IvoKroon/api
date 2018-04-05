@@ -4,7 +4,8 @@ const Schema = mongoose.Schema;
 // create a schema
 const recipeSchema = new Schema({
     title: String,
-    desc: String
+    desc: String,
+    recipeParts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'RecipePart' }],
 });
 
 // the schema is useless so far
