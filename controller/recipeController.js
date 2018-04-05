@@ -1,11 +1,13 @@
 const Recipe = require('../model/recipeModel');
+const RecipePartController = require('../controller/recipePartController');
+const Util = require('../util');
 
 module.exports = {
     // Find all recipes
     findAll: async () => {
         let recipes;
         try {
-            return await Recipe.find();;
+            return await Recipe.find().populate('recipeParts').exec();
         } catch (err) {
             throw err;
         }
@@ -22,6 +24,22 @@ module.exports = {
         }
     },
 
+    addRecipePart: async (recipeId, title, description, time) => {
+        try {
+            const recipePart = await RecipePartController.create(title, description, time);
+            if (Util.checkObjectId(recipeId)) {
+                const recipe = await Recipe.findById(recipeId);
+                if (recipe !== null) {
+                    recipe.recipeParts.push(recipePart);
+                    return await recipe.save();
+                }
+            }
+            return false;
+        } catch (err) {
+            throw err;
+        }
+    },
+
     remove: async id => {
         try {
             return await Recipe.find({ _id: id }).remove().exec();
@@ -29,9 +47,10 @@ module.exports = {
             throw err;
         }
     },
-    findOneById: (id) => {
+
+    findOneById: async (id) => {
         try {
-            return await Recipe.findOne({ _id: id });
+            return await Recipe.findById(id).populate('recipeParts').exec();
         } catch (err) {
             throw err;
         }

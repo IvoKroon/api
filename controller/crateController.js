@@ -1,3 +1,4 @@
+const Util = require('../util');
 const Crate = require('../model/crateModel');
 
 module.exports = {
@@ -25,7 +26,7 @@ module.exports = {
     // Find one create by id
     findOneById: async id => {
         try {
-            if (id.match(/^[0-9a-fA-F]{24}$/)) {
+            if (Util.checkObjectId(id)) {
                 return await Crate.findById(id);
             } else {
                 return false;

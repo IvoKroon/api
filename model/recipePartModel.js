@@ -4,12 +4,8 @@ const Schema = mongoose.Schema;
 // create a schema
 const recipeStepSchema = new Schema({
     title: String,
-    description: Number,
-    date: Date,
-});
-
-crateSchema.virtual('dateTimestamp').get(function () {
-    return this.date.getTime();
+    description: String,
+    time: Number,
 });
 
 // the schema is useless so far
