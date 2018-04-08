@@ -23,6 +23,15 @@ module.exports = {
         }
     },
 
+    addRecipe: async (crate, recipe) => {
+        try {
+            crate.recipe = recipe;
+            return await crate.save();
+        } catch (err) {
+            throw err;
+        }
+    },
+
     // Find one create by id
     findOneById: async id => {
         try {
@@ -35,6 +44,7 @@ module.exports = {
             throw err;
         }
     },
+
     remove: async id => {
         try {
             return await Crate.find({ _id: id }).remove().exec();

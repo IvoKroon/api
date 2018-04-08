@@ -1,4 +1,5 @@
 const Crate = require('../controller/crateController');
+const Recipe = require('../controller/recipeController');
 
 module.exports = app => {
     // CREATE: crate
@@ -27,8 +28,13 @@ module.exports = app => {
 
     // GET: all crates
     app.get('/crate', async (req, res) => {
-        const crates = await Crate.findAll();
-        res.json(crates);
+        if (req.query.userId && req.query.title) {
+            const { userId, title } = req.query;
+
+        } else {
+            const crates = await Crate.findAll();
+            res.json(crates);
+        }
     });
 
     // GET: crate by id
@@ -38,8 +44,25 @@ module.exports = app => {
         if (crate !== null) {
             res.json(crate)
         } else {
-            res.json({ error: 'No user found' })
+            res.json({ error: 'No crate found' })
         }
+    });
 
-    })
+
+
+    app.post('/crate/addrecipe/', async (req, res) => {
+        const { crateId, recipeId } = req.body;
+        if (crateId && recipeId) {
+            const crate = await Crate.findOneById(crateId);
+            const recipe = await Recipe.findOneById(recipeId);
+            if (crate !== null && recipe !== null) {
+                const result = await Crate.addRecipe(crate, recipe);
+                res.json(result);
+            } else {
+                res.json({ error: 'Not the right crate or recipe ID' })
+            }
+        } else {
+            res.json({ error: 'No crate or recipe ID found' })
+        }
+    });
 }

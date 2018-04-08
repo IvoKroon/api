@@ -38,25 +38,41 @@ module.exports = {
         }
     },
 
-    // checkCrateIsInArray: async crateId => {
-    //     try {
-    //         // db.survey.find(
-    //         //     { results: { $elemMatch: { product: "xyz", score: { $gte: 8 } } } }
-    //         //  )
-    //         console.log('START');
-    //         const result = await User.find(
-    //             { crates: { $elemMatch: { _id: crateId } } }
-    //         ).exec();
-    //         console.log('IN?', result);
-    //     } catch (err) {
-    //         throw err;
-    //     }
-    // },
+    // Item.find({}).populate({
+    //     path: 'tags',
+    //     match: { tagName: { $in: ['funny', 'politics'] }}
+    // }).exec((err, items) => {
+    //   console.log(items.tags) 
+    //   // contains only tags where tagName is 'funny' or 'politics'
+    // })
+    findOneByUserIdAndTitle: async (userId, title) => {
+        try {
+            return await User
+                .findOne({ '_id': userId })
+                .populate({
+                    path: 'crates',
+                    match: { title: { $in: title } }
+                }).exec();
+            // (err, user) => {
+
+            // console.log('CRATES', user.crates);
+            // if (user.crates.length > 0) {
+            //     console.log('CRATE', user.crates[0]);
+            //     return user.crates[0];
+            // } else {
+            //     return false
+            // }
+            // });
+        } catch (err) {
+            throw err;
+        }
+
+    },
 
     findOneById: async id => {
         try {
             if (id.match(/^[0-9a-fA-F]{24}$/)) {
-                return await User.findById(id);
+                return await User.findById(id).populate('crates').exec();
             } else {
                 return null;
             }
