@@ -21,12 +21,25 @@ db.once('open', err => {
 
     app.listen(port, () => {
         console.log('We are live  ' + port);
-        async () => {
-            const crate = await crateController.create('testing');
-            console.log(crate);
-        }
-
-
-
+        updater();
     });
 });
+
+
+
+//CHANGE DATA EVERY FIVE SECONDS
+function updater() {
+    const crateController = require('./controller/crateController');
+
+    async function updateCrate() {
+        const crates = await crateController.findAll();
+        for (const crate in crates) {
+            const temperature = Math.floor(Math.random() * (40 - 10)) + 10;
+            const humidity = Math.floor(Math.random() * (100 - 70)) + 70;
+            await crateController.update(crates[crate]._id, temperature, humidity);
+        }
+
+        setTimeout(updateCrate, 1 * 5000);
+    }
+    setTimeout(updateCrate, 1 * 5000);
+}

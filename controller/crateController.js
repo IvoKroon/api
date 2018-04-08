@@ -23,6 +23,22 @@ module.exports = {
         }
     },
 
+    update: async (crateId, temperature, humidity) => {
+        try {
+            const crate = await Crate.findById(crateId);
+            if (crate) {
+                crate.temperature = temperature;
+                crate.humidity = humidity;
+                return await crate.save()
+            }
+            return false;
+
+
+        } catch (err) {
+            throw err;
+        }
+    },
+
     addRecipe: async (crate, recipe) => {
         try {
             crate.recipe = recipe;
