@@ -1,5 +1,5 @@
 const express = require('express');
-// const MongoClient = require('mongodb').MongoClient;
+
 const mongoose = require('mongoose');
 
 const bodyParser = require('body-parser');
@@ -24,8 +24,6 @@ db.once('open', err => {
         updater();
     });
 });
-
-
 
 //CHANGE DATA EVERY FIVE SECONDS
 function updater() {

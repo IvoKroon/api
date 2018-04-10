@@ -5,7 +5,7 @@ const UserController = require('../controller/userController');
 module.exports = app => {
     app.get('/user', async (req, res) => {
         const users = await UserController.findAll();
-        res.json(users);
+        res.json({ users });
     });
 
     app.get('/user/:userId', async (req, res) => {
@@ -18,10 +18,22 @@ module.exports = app => {
         }
     });
 
+    app.get('/user/:userId/number/:number', async (req, res) => {
+        const { userId, number } = req.params;
+        if (userId && number) {
+            console.log(number);
+            console.log(userId);
+            const user = await UserController.findOneByUserIdAndNumber(userId, number);
+            if (user) {
+                res.json(user.crates[0]);
+            }
+        }
+        res.json({ error: 'ERROR' });
+    });
+
     app.get('/user/:userId/:title', async (req, res) => {
         const { userId, title } = req.params;
         if (userId && title) {
-            console.log(userId + ' -  ' + title);
             const user = await UserController.findOneByUserIdAndTitle(userId, title);
             if (user) {
                 console.log('LENGTH', user.crates.length);

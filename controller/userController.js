@@ -38,13 +38,6 @@ module.exports = {
         }
     },
 
-    // Item.find({}).populate({
-    //     path: 'tags',
-    //     match: { tagName: { $in: ['funny', 'politics'] }}
-    // }).exec((err, items) => {
-    //   console.log(items.tags) 
-    //   // contains only tags where tagName is 'funny' or 'politics'
-    // })
     findOneByUserIdAndTitle: async (userId, title) => {
         try {
             return await User
@@ -53,20 +46,22 @@ module.exports = {
                     path: 'crates',
                     match: { title: { $in: title } }
                 }).exec();
-            // (err, user) => {
-
-            // console.log('CRATES', user.crates);
-            // if (user.crates.length > 0) {
-            //     console.log('CRATE', user.crates[0]);
-            //     return user.crates[0];
-            // } else {
-            //     return false
-            // }
-            // });
         } catch (err) {
             throw err;
         }
+    },
 
+    findOneByUserIdAndNumber: async (userId, number) => {
+        try {
+            console.log('NUMBER', number)
+            return await User
+                .findOne({ '_id': userId })
+                .slice('crates', [parseInt(number), 1])
+                .populate('crates')
+                .exec();
+        } catch (err) {
+            throw err;
+        }
     },
 
     findOneById: async id => {
