@@ -42,7 +42,7 @@ module.exports = app => {
         const id = req.params.id;
         const crate = await Crate.findOneById(id);
         if (crate !== null) {
-            res.json(crate)
+            res.json({ crate })
         } else {
             res.json({ error: 'No crate found' })
         }

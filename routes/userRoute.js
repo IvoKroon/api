@@ -77,4 +77,19 @@ module.exports = app => {
         }
         res.json({ error: 'Something went wrong' });
     });
+
+    app.post('/user/newcrate/', async (req, res) => {
+        const { userId, title } = req.body;
+        if (userId && title) {
+            const user = await UserController.findOneById(userId);
+            const crate = await CrateController.create(title);
+
+            if (crate !== null && user !== null) {
+                // BUG: At the moment you can add multiple the same crates
+                const newUser = await UserController.addCrate(user, crate);
+                res.json({ crate: crate });
+            }
+        }
+        res.json({ error: 'Something went wrong' });
+    });
 }
